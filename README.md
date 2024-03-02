@@ -8,7 +8,7 @@ Uma app web para listagem de exames médicos feita com Sinatra e PostgreSQL
 ### Clone o repositório e entre na pasta
 ```bash
 git clone git@github.com:hreis1/rebase_labs.git
-cd labslabs
+cd rebase_labs
 ```
 
 ### Crie a rede
