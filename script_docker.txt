@@ -1,5 +1,0 @@
-docker network create -d bridge relabs
-
-docker run --rm --network relabs --name server -w /app -v .:/app -p 4567:4567 -d ruby bash -c "bundle && ruby server.rb -o 0.0.0.0"
-
-docker run --rm --network relabs --name postgres -p 5432:5432 -v ./init.sql:/docker-entrypoint-initdb.d/init.sql -e POSTGRES_PASSWORD=postgres -d postgres

@@ -1,8 +1,12 @@
 require 'sinatra'
 require 'pg'
 
+set :server, :puma
+set :port, 3000
+set :bind, '0.0.0.0'
+
 conn = PG.connect(
-  host: 'postgres',
+  host: ENV['DB_HOST'] || 'localhost',
   password: 'postgres',
   user: 'postgres',
   dbname: 'postgres'

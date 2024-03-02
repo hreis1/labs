@@ -13,11 +13,12 @@ rows.map do |row|
 end
 
 conn = PG.connect(
-  host: 'localhost',
+  host: ENV['DB_HOST'] || 'localhost',
   password: 'postgres',
   user: 'postgres',
   dbname: 'postgres'
 )
+
 sql_insert = <<~SQL
   INSERT INTO tests (
       patient_cpf, patient_name, patient_email, patient_birthdate,
@@ -28,6 +29,8 @@ sql_insert = <<~SQL
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
 SQL
 
-rows.each do |row|
+rows.each_with_index do |row, idx|
+  print "Importing data... #{idx + 1}/#{rows.size}\r"
   conn.exec(sql_insert, row)
+  system('clear')
 end
