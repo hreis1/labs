@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'pg'
+require_relative 'test'
 
 set :server, :puma
 set :port, 3000
@@ -14,7 +15,7 @@ conn = PG.connect(
 
 get '/tests' do
   content_type :json
-  result = conn.exec('SELECT * FROM tests').to_a
+  result = Test.all
   result.to_json
 end
 
