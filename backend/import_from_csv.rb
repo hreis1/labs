@@ -1,24 +1,34 @@
 require 'csv'
 require 'pg'
+require_relative './models/patient'
+require_relative './models/doctor'
+require_relative './models/exam'
+require_relative './models/test'
 
-sql_insert = <<~SQL
-  INSERT INTO tests (
-      patient_cpf, patient_name, patient_email, patient_birthdate,
-      patient_address, patient_city, patient_state, doctor_crm,
-      doctor_crm_state, doctor_name, doctor_email, exam_token,
-      exam_date, exam_type, exam_limits, exam_result
-      )
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
-SQL
+rows = CSV.read('./data/data.csv', col_sep: ';')
+rows.shift
 
-conn = PG.connect(host: 'postgres', dbname: 'postgres', user: 'postgres', password: 'postgres')
+connection = PG.connect(dbname: 'postgres', user: 'postgres', password: 'postgres', host: 'postgres')
 
-rows = CSV.read('./data.csv', col_sep: ';')
-columns = rows.shift
-rows.map do |row|
-  row.each_with_object({}).with_index do |(cell, acc), idx|
-    column = columns[idx]
-    acc[column] = cell
-    conn.exec_params(sql_insert, acc.values) if idx == 15
+connection.transaction do |conn|
+  rows.each do |row|
+    cpf, name, email, birthdate, address, city, state = row[0..6]
+
+    patient = Patient.find_by_cpf(cpf:, conn:)
+    patient = Patient.create(cpf:, name:, email:, birthdate:, address:, city:, state:, conn:) if patient.none?
+    patient_id = patient.first['id']
+
+    crm, crm_state, name, email = row[7..10]
+    doctor = Doctor.find_by_crm(crm:, crm_state:, conn:)
+    doctor = Doctor.create(crm:, crm_state:, name:, email:, conn:) if doctor.none?
+    doctor_id = doctor.first['id']
+
+    result_token, result_date = row[11..12]
+    exam = Exam.find_by_result_token(result_token:, result_date:, conn:)
+    exam = Exam.create(patient_id:, doctor_id:, result_token:, result_date:, conn:) if exam.none?
+    exam_id = exam.first['id']
+
+    type, limits, result = row[13..15]
+    Test.create(exam_id:, type:, limits:, result:, conn:)
   end
 end
