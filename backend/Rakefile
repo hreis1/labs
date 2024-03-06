@@ -1,0 +1,9 @@
+desc "Import data from CSV"
+namespace :db do
+  task :import do
+    time = Time.now
+    puts "Importing data from CSV..."
+    system('ruby import_from_csv.rb')
+    puts "Data imported in #{Time.now - time} seconds"
+  end
+end
