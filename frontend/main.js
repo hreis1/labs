@@ -1,54 +1,51 @@
-fetch('http://localhost:3000/tests')
-  .then(response => response.json())
-  .then(data => {
-    const ul = document.querySelector('ul');
-    ul.innerHTML = '';
-    data.forEach(exam => {
-      const li = document.createElement('li');
-      li.innerHTML = `
-        <dl>
-          <dt>Token</dt>
-          <dd>${exam.result_token}</dd>
-          <dt>Data</dt>
-          <dd>${exam.result_date}</dd>
-          <dt>Paciente</dt>
-          <dd>${exam.patient_name}</dd>
-          <dt>CPF</dt>
-          <dd>${exam.cpf}</dd>
-          <dt>Email</dt>
-          <dd>${exam.email}</dd>
-          <dt>Nascimento</dt>
-          <dd>${exam.birthdate}</dd>
-          <dt>Médico</dt>
-          <dd>${exam.doctor.name}</dd>
-          <dt>CRM</dt>
-          <dd>${exam.doctor.crm}</dd>
-          <dt>Estado CRM</dt>
-          <dd>${exam.doctor.crm_state}</dd>
-        </dl>
-        <br>
-        `;
-        const details = document.createElement('details');
-        details.innerHTML = `
-          <summary>Resultados</summary>
-        `;
-        li.appendChild(details);
-        const div = document.createElement('div');
-        exam.tests.forEach(test => {
-          div.innerHTML += `
-            <dl>
-              <dt>Exame</dt>
-              <dd>${test.name}</dd>
-              <dt>Tipo</dt>
-              <dd>${test.type}</dd>
-              <dt>Resultado</dt>
-              <dd>${test.result}</dd>
-              <dt>Valor de Referência</dt>
-              <dd>${test.limits}</dd>
-            </dl>
-          `;
-          details.appendChild(div);
-        });
-      ul.appendChild(li);
-    });
+const fetchData = async () => {
+  try {
+    const response = await fetch('http://localhost:3000/tests');
+    const data = await response.json();
+    return data;
+  } catch {
+    return [];
+  }
+};
+
+const createTable = (data) => {
+  const table = document.querySelector('body > main > table');
+
+  const thead = document.createElement('thead');
+  thead.innerHTML = `
+    <tr>
+      <th>Token</th>
+      <th>Data</th>
+      <th>Paciente</th>
+      <th>CPF</th>
+      <th>Email</th>
+      <th>Nascimento</th>
+      <th>Médico</th>
+      <th>CRM</th>
+      <th>Estado CRM</th>
+    </tr>
+  `;
+
+  const tbody = document.createElement('tbody');
+  data.forEach(exam => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${exam.result_token}</td>
+      <td>${new Date(exam.result_date).toLocaleDateString()}</td>
+      <td>${exam.patient_name}</td>
+      <td>${exam.cpf}</td>
+      <td>${exam.email}</td>
+      <td>${new Date(exam.birthdate).toLocaleDateString()}</td>
+      <td>${exam.doctor.name}</td>
+      <td>${exam.doctor.crm}</td>
+      <td>${exam.doctor.crm_state}</td>
+    `;
+    tbody.appendChild(tr);
   });
+
+  table.appendChild(thead);
+  table.appendChild(tbody);
+};
+
+fetchData()
+  .then(data => createTable(data));
