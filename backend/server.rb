@@ -1,5 +1,6 @@
 require 'rack'
 require 'json'
+require_relative 'models/exam'
 
 class Server
   def call(env)
@@ -11,8 +12,8 @@ class Server
 
     case path
     when '/tests'
-      exams = [].to_json
-      [200, headers, [exams]]
+      exams = Exam.all
+      [200, headers, [exams.to_json]]
     else
       [404, headers, ['Not found']]
     end
