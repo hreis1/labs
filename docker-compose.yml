@@ -1,12 +1,12 @@
 services:
-  server:
+  api:
     image: ruby
-    container_name: server
+    container_name: api
     volumes:
       - .:/app
       - rubygems:/usr/local/bundle
     working_dir: /app
-    command: bash -c "bundle install && rackup -p 3000 -o 0.0.0.0"
+    command: bash -c "bundle install && rackup"
     ports:
       - "3000:3000"
 
@@ -14,9 +14,7 @@ services:
     image: postgres
     container_name: postgres
     environment:
-      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=postgres
     volumes:
       - ./config/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
