@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'GET /exams' do
+describe 'GET /api/tests' do
   context 'retorna uma lista de exames' do
     it 'e não tem nenhum exame' do
       get '/api/tests'

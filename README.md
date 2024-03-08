@@ -31,7 +31,7 @@ docker exec api bash -c "rspec"
 ## Endpoints
 ### Listar exames
 ```
-GET /api/exams
+GET /api/tests
 ```
 
 <details>
