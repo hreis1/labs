@@ -27,3 +27,68 @@ Com o servidor criado, execute o comando para rodar os testes:
 ```bash
 docker exec api bash -c "rspec"
 ```
+
+## Endpoints
+### Listar exames
+```
+GET /api/exams
+```
+
+<details>
+<summary>Exemplos de resposta</summary>
+
+### Com exames no banco de dados:
+
+```json
+[
+  {
+    "result_token": "IQCZ17",
+    "result_date": "2021-08-05",
+    "patient_name": "Emilly Batista Neto",
+    "email": "emilly@email.com",
+    "birthdate": "2001-03-11",
+    "doctor": {
+      "crm": "B000BJ20J4",
+      "crm_state": "PI",
+      "name": "Maria Luiza Pires"
+    },
+    "tests": [
+      {
+        "type": "hemácias",
+        "limits": "45-52",
+        "result": 97
+      }
+    ]
+  },
+  {
+    "result_token": "0W9I67",
+    "result_date": "2021-07-09",
+    "patient_name": "Sicrano",
+    "email": "sicrano@email.com",
+    "birthdate": "1990-01-01",
+    "doctor": {
+      "crm": "B000BJ20J4",
+      "crm_state": "PI",
+      "name": "Maria Luiza Pires"
+    },
+    "tests": [
+      {
+        "type": "eletrólitos",
+        "limits": "2-68",
+        "result": 61
+      }
+    ]
+  }
+]
+```
+
+HTTP Status: 200
+
+### Sem exames no banco de dados:
+
+```json
+[]
+```
+HTTP Status: 200
+
+</details>
