@@ -28,6 +28,7 @@ RSpec.describe Exam do
       expect(exam['result_date']).to eq('2021-08-05')
     end
   end
+
   describe '.find_by_result_token' do
     it 'e retorna um exame' do
       patient = Patient.create(cpf: '048.973.170-88',
@@ -43,23 +44,47 @@ RSpec.describe Exam do
                              name: 'Maria Luiza Pires',
                              email: 'denna@wisozk.biz')
 
-      Exam.create(patient_id: patient['id'],
-                  doctor_id: doctor['id'],
-                  result_token: 'IQCZ17',
-                  result_date: '2021-08-05')
+      exam = Exam.create(patient_id: patient['id'],
+                         doctor_id: doctor['id'],
+                         result_token: 'IQCZ17',
+                         result_date: '2021-08-05')
 
-      Exam.create(patient_id: patient['id'],
-                  doctor_id: doctor['id'],
-                  result_token: 'IQCZ18',
-                  result_date: '2021-08-05')
+      Test.create(exam_id: exam['id'],
+                  type: 'hemácias',
+                  limits: '45-52',
+                  result: 97)
 
+      other_exam = Exam.create(patient_id: patient['id'],
+                               doctor_id: doctor['id'],
+                               result_token: 'IQCZ18',
+                               result_date: '2021-08-05')
+
+      Test.create(exam_id: other_exam['id'],
+                  type: 'eletrólitos',
+                  limits: '2-68',
+                  result: 61)
+
+      Test.create(exam_id: other_exam['id'],
+                  type: 'hemoglobina',
+                  limits: '12-16',
+                  result: 14)
+
+    
       exam = Exam.find_by_result_token(result_token: 'IQCZ18')
 
       expect(exam['id']).not_to be_nil
       expect(exam['result_token']).to eq('IQCZ18')
       expect(exam['result_date']).to eq('2021-08-05')
-      expect(exam['patient_id']).to eq(patient['id'])
-      expect(exam['doctor_id']).to eq(doctor['id'])
+      expect(exam['patient_name']).to eq(patient['name'])
+      expect(exam['email']).to eq(patient['email'])
+      expect(exam['birthdate']).to eq(patient['birthdate'])
+      expect(exam['doctor']['crm']).to eq(doctor['crm'])
+      expect(exam['doctor']['crm_state']).to eq(doctor['crm_state'])
+      expect(exam['doctor']['name']).to eq(doctor['name'])
+      expect(exam['tests']).to eq [
+        { 'type' => 'eletrólitos', 'limits' => '2-68', 'result' => '61' },
+        { 'type' => 'hemoglobina', 'limits' => '12-16', 'result' => '14' }
+      ]
     end
 
     it 'e retorna nil se não encontrar o exame' do
@@ -68,6 +93,7 @@ RSpec.describe Exam do
       expect(exam).to be_nil
     end
   end
+
   describe '.all' do
     it 'e retorna todos os exames' do
       patient = Patient.create(cpf: '048.973.170-88',

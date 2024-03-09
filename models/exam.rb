@@ -11,7 +11,43 @@ class Exam
 
   def self.find_by_result_token(result_token:)
     sql = 'SELECT * FROM exams WHERE result_token = $1 LIMIT 1'
-    Database.connection.exec_params(sql, [result_token]).entries.first
+    exam = Database.connection.exec_params(sql, [result_token]).entries.first
+    return nil if exam.nil?
+
+    sql_complement = <<~SQL
+      SELECT
+        patients.cpf,
+        patients.name AS patient_name,
+        patients.email,
+        patients.birthdate,
+        doctors.crm,
+        doctors.crm_state,
+        doctors.name AS doctor_name,
+        tests.type, tests.limits, tests.result
+      FROM exams
+      JOIN patients ON patient_id = patients.id
+      JOIN doctors  ON doctor_id = doctors.id
+      JOIN tests    ON exam_id = exams.id
+      WHERE exams.id = $1
+    SQL
+    result = Database.connection.exec_params(sql_complement, [exam['id']]).entries
+    {
+      'id' => exam['id'],
+      'result_token' => exam['result_token'],
+      'result_date' => exam['result_date'],
+      'cpf' => result[0]['cpf'],
+      'patient_name' => result[0]['patient_name'],
+      'email' => result[0]['email'],
+      'birthdate' => result[0]['birthdate'],
+      'doctor' => {
+        'crm' => result[0]['crm'],
+        'crm_state' => result[0]['crm_state'],
+        'name' => result[0]['doctor_name']
+      },
+      'tests' => result.map do |test|
+                   { 'type' => test['type'], 'limits' => test['limits'], 'result' => test['result'] }
+                 end
+    }
   end
 
   def self.all
@@ -58,24 +94,3 @@ class Exam
     exams.values
   end
 end
-
-# {
-#   result_token:,
-#   result_date: tests.first['result_date'],
-#   cpf: tests.first['cpf'],
-#   patient_name: tests.first['patient_name'],
-#   email: tests.first['email'],
-#   birthdate: tests.first['birthdate'],
-#   doctor: {
-#     crm: tests.first['crm'],
-#     crm_state: tests.first['crm_state'],
-#     name: tests.first['doctor_name']
-#   },
-#   tests: tests.map do |test|
-#     {
-#       type: test['type'],
-#       limits: test['limits'],
-#       result: test['result']
-#     }
-#   end
-# }

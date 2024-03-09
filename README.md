@@ -63,8 +63,8 @@ GET /api/tests
   {
     "result_token": "0W9I67",
     "result_date": "2021-07-09",
-    "patient_name": "Sicrano",
-    "email": "sicrano@email.com",
+    "patient_name": "Luan Oliveira",
+    "email": "luan@email.com",
     "birthdate": "1990-01-01",
     "doctor": {
       "crm": "B000BJ20J4",
@@ -90,5 +90,51 @@ HTTP Status: 200
 []
 ```
 HTTP Status: 200
+
+</details>
+
+### Obter exame
+```
+GET /api/tests/:token
+```
+
+<details>
+<summary>Exemplos de resposta</summary>
+
+### Com exame no banco de dados:
+
+```json
+{
+  "result_token": "IQCZ17",
+  "result_date": "2021-08-05",
+  "patient_name": "Emilly Batista Neto",
+  "email": "emilly@email.com",
+  "birthdate": "2001-03-11",
+  "doctor": {
+    "crm": "B000BJ20J4",
+    "crm_state": "PI",
+    "name": "Maria Luiza Pires"
+  },
+  "tests": [
+    {
+      "type": "hemácias",
+      "limits": "45-52",
+      "result": 97
+    }
+  ]
+}
+```
+
+HTTP Status: 200
+
+### Sem exame no banco de dados:
+
+```json
+{
+  "error": "Exam not found"
+}
+```
+
+HTTP Status: 404
 
 </details>
