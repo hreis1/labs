@@ -138,3 +138,8 @@ HTTP Status: 200
 HTTP Status: 404
 
 </details>
+
+### Importar exames
+```
+POST /api/import
+```

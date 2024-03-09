@@ -118,3 +118,24 @@ describe 'GET /api/tests/:token' do
     expect(JSON.parse(last_response.body)).to eq('error' => 'Exam not found')
   end
 end
+
+describe 'POST /api/import' do
+  it 'importa um csv' do
+    file = Rack::Test::UploadedFile.new('spec/support/data.csv', 'text/csv')
+
+    post '/api/import', file: file
+
+    expect(last_response).to be_created
+    expect(last_response.content_type).to eq('application/json')
+    expect(JSON.parse(last_response.body)).to eq('message' => 'Exams imported')
+    expect(Exam.all.size).to eq(1)
+  end
+
+  it 'não importa um csv' do
+    post '/api/import'
+
+    expect(last_response).to be_bad_request
+    expect(last_response.content_type).to eq('application/json')
+    expect(JSON.parse(last_response.body)).to eq('error' => 'Invalid file')
+  end
+end
