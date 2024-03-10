@@ -1,9 +1,10 @@
+require_relative '../app'
 require_relative '../database'
-require_relative '../models/patient'
+require_relative '../lib/import'
 require_relative '../models/doctor'
 require_relative '../models/exam'
+require_relative '../models/patient'
 require_relative '../models/test'
-require_relative '../app'
 require 'rack/test'
 
 def app

@@ -1,3 +1,3 @@
-require_relative './models/import'
+require_relative './lib/import'
 
-import_from_csv(file:'./data/data.csv')
+import_from_csv(csv: File.read('./data/data.csv'))

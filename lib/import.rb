@@ -1,12 +1,12 @@
-require_relative './patient'
-require_relative './doctor'
-require_relative './exam'
-require_relative './test'
+require_relative '../models/patient'
+require_relative '../models/doctor'
+require_relative '../models/exam'
+require_relative '../models/test'
 require 'benchmark'
 require 'csv'
 
-def import_from_csv(file:)
-  rows = CSV.read(file, col_sep: ';')
+def import_from_csv(csv:)
+  rows = CSV.parse(csv, col_sep: ';')
   rows.shift
   @time = Benchmark.measure do
     Database.connection.transaction do |conn|

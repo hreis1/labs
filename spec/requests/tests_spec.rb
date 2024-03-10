@@ -59,22 +59,22 @@ end
 describe 'GET /api/tests/:token' do
   it 'retorna um exame' do
     patient = Patient.create(cpf: '048.973.170-88',
-                              name: 'Emilly Batista Neto',
-                              email: 'gerald.crona@ebert-quigley.com',
-                              birthdate: '2001-03-11',
-                              address: '165 Rua Rafaela',
-                              city: 'Ituverava',
-                              state: 'Alagoas')
+                             name: 'Emilly Batista Neto',
+                             email: 'gerald.crona@ebert-quigley.com',
+                             birthdate: '2001-03-11',
+                             address: '165 Rua Rafaela',
+                             city: 'Ituverava',
+                             state: 'Alagoas')
 
     doctor = Doctor.create(crm: 'B000BJ20J4',
-                            crm_state: 'PI',
-                            name: 'Maria Luiza Pires',
-                            email: 'denna@wisozk.biz')
+                           crm_state: 'PI',
+                           name: 'Maria Luiza Pires',
+                           email: 'denna@wisozk.biz')
 
     exam = Exam.create(patient_id: patient['id'],
-                        doctor_id: doctor['id'],
-                        result_token: 'IQCZ17',
-                        result_date: '2021-08-05')
+                       doctor_id: doctor['id'],
+                       result_token: 'IQCZ17',
+                       result_date: '2021-08-05')
 
     Test.create(exam_id: exam['id'],
                 type: 'hemácias',
@@ -82,9 +82,9 @@ describe 'GET /api/tests/:token' do
                 result: 97)
 
     other_exam = Exam.create(patient_id: patient['id'],
-                              doctor_id: doctor['id'],
-                              result_token: 'T9O6AI',
-                              result_date: '2021-11-21')
+                             doctor_id: doctor['id'],
+                             result_token: 'T9O6AI',
+                             result_date: '2021-11-21')
 
     Test.create(exam_id: other_exam['id'],
                 type: 'hemácias',
@@ -121,9 +121,8 @@ end
 
 describe 'POST /api/import' do
   it 'importa um csv' do
-    file = Rack::Test::UploadedFile.new('spec/support/data.csv', 'text/csv')
-
-    post '/api/import', file: file
+    csv = 'spec/support/data.csv'
+    post '/api/import', file: Rack::Test::UploadedFile.new(csv, 'text/csv')
 
     expect(last_response).to be_created
     expect(last_response.content_type).to eq('application/json')
