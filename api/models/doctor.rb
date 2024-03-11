@@ -1,4 +1,4 @@
-require_relative '../database'
+require './lib/database'
 
 class Doctor
   def self.create(crm:, crm_state:, name:, email:)

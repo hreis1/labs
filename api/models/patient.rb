@@ -1,4 +1,4 @@
-require_relative '../database'
+require './lib/database'
 
 class Patient
   def self.create(cpf:, name:, email:, birthdate:, address:, city:, state:)

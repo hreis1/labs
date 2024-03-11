@@ -1,7 +1,7 @@
-require_relative '../models/patient'
-require_relative '../models/doctor'
-require_relative '../models/exam'
-require_relative '../models/test'
+require './models/patient'
+require './models/doctor'
+require './models/exam'
+require './models/test'
 require 'benchmark'
 require 'csv'
 

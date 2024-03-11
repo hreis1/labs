@@ -1,5 +1,5 @@
 require './app'
-require './database'
+require './lib/database'
 require './lib/import'
 require './models/doctor'
 require './models/exam'

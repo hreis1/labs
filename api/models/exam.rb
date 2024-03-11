@@ -1,4 +1,4 @@
-require_relative '../database'
+require './lib/database'
 
 class Exam
   def self.create(patient_id:, doctor_id:, result_token:, result_date:)

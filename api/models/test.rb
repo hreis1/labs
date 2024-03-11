@@ -1,4 +1,4 @@
-require_relative '../database'
+require './lib/database'
 
 class Test
   def self.create(exam_id:, type:, limits:, result:)

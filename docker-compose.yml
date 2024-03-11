@@ -5,7 +5,7 @@ services:
     environment:
       - REDIS_URL=redis://redis:6379/0
     volumes:
-      - .:/app
+      - ./api:/app
       - rubygems:/usr/local/bundle
     working_dir: /app
     command: bash -c "bundle install && rackup"
@@ -21,10 +21,14 @@ services:
     environment:
       - REDIS_URL=redis://redis:6379/0
     volumes:
-      - .:/app
+      - ./api:/app
       - rubygems:/usr/local/bundle
     working_dir: /app
     command: bash -c "bundle install && sidekiq -r ./lib/import_job.rb"
+    depends_on:
+      - redis
+      - postgres
+      - api
 
   redis:
     image: redis
@@ -36,7 +40,7 @@ services:
     environment:
       - POSTGRES_PASSWORD=postgres
     volumes:
-      - ./config/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./api/config/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5432:5432"
 
