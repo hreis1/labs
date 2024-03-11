@@ -53,7 +53,6 @@ GEM
     webrick (1.8.1)
 
 PLATFORMS
-  ruby
   x86_64-linux
 
 DEPENDENCIES
@@ -66,4 +65,4 @@ DEPENDENCIES
   sinatra
 
 BUNDLED WITH
-   2.5.4
+   2.5.3

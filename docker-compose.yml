@@ -11,6 +11,9 @@ services:
     command: bash -c "bundle install && rackup"
     ports:
       - "3000:3000"
+    depends_on:
+      - redis
+      - postgres
 
   sidekiq:
     image: ruby
@@ -21,7 +24,7 @@ services:
       - .:/app
       - rubygems:/usr/local/bundle
     working_dir: /app
-    command: bash -c "bundle install && sidekiq -r ./lib/import_job.rb"''
+    command: bash -c "bundle install && sidekiq -r ./lib/import_job.rb"
 
   redis:
     image: redis
