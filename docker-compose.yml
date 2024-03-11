@@ -2,6 +2,8 @@ services:
   api:
     image: ruby
     container_name: api
+    environment:
+      - REDIS_URL=redis://redis:6379/0
     volumes:
       - .:/app
       - rubygems:/usr/local/bundle
@@ -9,6 +11,21 @@ services:
     command: bash -c "bundle install && rackup"
     ports:
       - "3000:3000"
+
+  sidekiq:
+    image: ruby
+    container_name: sidekiq
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+    volumes:
+      - .:/app
+      - rubygems:/usr/local/bundle
+    working_dir: /app
+    command: bash -c "bundle install && sidekiq -r ./lib/import_job.rb"''
+
+  redis:
+    image: redis
+    container_name: redis
 
   postgres:
     image: postgres

@@ -1,5 +1,5 @@
-require_relative './lib/import'
-require_relative './models/exam'
+require './lib/import_job'
+require './models/exam'
 require 'sinatra'
 
 get '/api/tests' do
@@ -19,7 +19,6 @@ end
 post '/api/import' do
   content_type :json
   begin
-    status 201
     csv = if params[:file]
             params[:file][:tempfile].read
           else
@@ -28,10 +27,11 @@ post '/api/import' do
 
     raise 'Invalid file' if csv.empty?
 
-    import_from_csv(csv:)
+    ImportJob.perform_async(csv)
+    status 201
     { message: 'Exams imported' }.to_json
-  rescue StandardError
+  rescue StandardError => e
     status 400
-    { error: 'Invalid file' }.to_json
+    { error: e.message }.to_json
   end
 end
