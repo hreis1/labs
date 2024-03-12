@@ -32,7 +32,7 @@ document.getElementById('search').addEventListener('input', function(event) {
       let found = false;
       tds.forEach(td => {
         let value = event.target.value.trim();
-        if (td.textContent.includes(value.toUpperCase()) || td.textContent.includes(value.toLowerCase()) || td.textContent.includes(value)) {
+        if (td.textContent.includes(value.toUpperCase()) || td.textContent.includes(value)) {
           found = true;
         }
       });
@@ -92,6 +92,10 @@ const createTable = (data) => {
     tdDoctor.textContent = exam.doctor.name;
     tr.appendChild(tdDoctor);
 
+    tr.addEventListener('click', function() {
+      getExamData(exam.result_token);
+    });
+
     tbody.appendChild(tr);
   });
   table.appendChild(thead);
@@ -100,3 +104,47 @@ const createTable = (data) => {
 
 fetchData()
   .then(data => createTable(data));
+
+
+getExamData = async (token) => {
+  try {
+    const response = await fetch(`http://localhost:3000/api/tests/${token}`);
+    const data = await response.json();
+    console.log(data);
+    const modal = document.querySelector('.modal');
+    modal.style.display = 'block';
+    const modalContent = document.querySelector('.modal-content');
+    modalContent.innerHTML = `
+      <span class="close">&times;</span>
+      <h2>Exame</h2>
+      <p><strong>Token:</strong> ${data.result_token}</p>
+      <p><strong>Data:</strong> ${new Date(data.result_date).toLocaleDateString()}</p>
+      <p><strong>Paciente:</strong>< ${data.patient_name}</p>
+      <p><strong>Nascimento:</strong> ${new Date(data.birthdate).toLocaleDateString()}</p>
+      <p><strong>Email:</strong> ${data.email}</p>
+      <p><strong>CPF:</strong> ${data.cpf}</p>
+      <p><strong>Médico:</strong> ${data.doctor.name}</p>
+      <p><strong>CRM:</strong> ${data.doctor.crm}</p>
+      <p><strong>CRM UF:</strong> ${data.doctor.crm_state}</p>
+      ${data.tests.map(exam => {
+        return `<p><strong>Tipo:</strong> ${exam.type}</p>
+        <p><strong>Resultado:</strong> ${exam.result}</p>
+        <p><strong>Valor de Referência:</strong> ${exam.limits}</p>
+        `;
+      }
+      ).join('')}
+    `;
+    const close = document.querySelector('.close');
+    close.addEventListener('click', function() {
+      modal.style.display = 'none';
+    });
+    window.addEventListener('click', function(event) {
+      if (event.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+
+  } catch (error) {
+    console.log(error);
+  }
+};

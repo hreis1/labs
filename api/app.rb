@@ -3,11 +3,13 @@ require './models/exam'
 require 'sinatra'
 
 get '/api/tests' do
+  headers 'Access-Control-Allow-Origin' => '*'
   content_type :json
   Exam.all.to_json
 end
 
 get '/api/tests/:token' do
+  headers 'Access-Control-Allow-Origin' => '*'
   content_type :json
   exam = Exam.find_by_result_token(result_token: params[:token])
   return exam.to_json if exam
@@ -18,6 +20,7 @@ end
 
 post '/api/import' do
   content_type :json
+  headers 'Access-Control-Allow-Origin' => '*'
   begin
     csv = if params[:file]
             params[:file][:tempfile].read
