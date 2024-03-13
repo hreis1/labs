@@ -2,6 +2,7 @@ require './lib/database'
 
 class Patient
   def self.create(cpf:, name:, email:, birthdate:, address:, city:, state:)
+    return if cpf.empty? || name.empty? || email.empty? || birthdate.empty? || address.empty? || city.empty? || state.empty?
     sql = <<~SQL
       INSERT INTO patients (cpf, name, email, birthdate, address, city, state)
       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *

@@ -27,6 +27,148 @@ RSpec.describe Exam do
       expect(exam['result_token']).to eq('IQCZ17')
       expect(exam['result_date']).to eq('2021-08-05')
     end
+
+    it 'e retorna nil se o paciente não existir' do
+      doctor = Doctor.create(crm: 'B000BJ20J4',
+                             crm_state: 'PI',
+                             name: 'Maria Luiza Pires',
+                             email: 'denna@wisozk.biz')
+
+      exam = Exam.create(patient_id: 1,
+                          doctor_id: doctor['id'],
+                          result_token: 'IQCZ17',
+                          result_date: '2021-08-05')
+
+      expect(exam).to be_nil
+      expect(Database.connection.exec('SELECT * FROM exams').count).to eq(0)
+    end
+
+    it 'e retorna nil se o médico não existir' do
+      patient = Patient.create(cpf: '048.973.170-88',
+                               name: 'Emilly Batista Neto',
+                               email: 'denna@wisozk.biz',
+                               birthdate: '2001-03-11',
+                               address: '165 Rua Rafaela',
+                               city: 'Ituverava',
+                               state: 'Alagoas')
+
+      exam = Exam.create(patient_id: patient['id'],
+                         doctor_id: 1,
+                         result_token: 'IQCZ17',
+                         result_date: '2021-08-05')
+
+      expect(exam).to be_nil
+      expect(Database.connection.exec('SELECT * FROM exams').count).to eq(0)
+    end
+
+    it 'e retorna nil se o token do exame já existir' do
+      patient = Patient.create(cpf: '048.973.170-88',
+                               name: 'Emilly Batista Neto',
+                               email: 'denna@wisozk.biz',
+                               birthdate: '2001-03-11',
+                               address: '165 Rua Rafaela',
+                               city: 'Ituverava',
+                               state: 'Alagoas')
+
+      doctor = Doctor.create(crm: 'B000BJ20J4',
+                             crm_state: 'PI',
+                             name: 'Maria Luiza Pires',
+                             email: 'gerald.crona@ebert-quigley.com')
+
+      Exam.create(patient_id: patient['id'],
+                  doctor_id: doctor['id'],
+                  result_token: 'IQCZ17',
+                  result_date: '2021-08-05')
+
+      exam = Exam.create(patient_id: patient['id'],
+                          doctor_id: doctor['id'],
+                          result_token: 'IQCZ17',
+                          result_date: '2021-08-05')
+    
+      expect(exam).to be_nil
+      expect(Database.connection.exec('SELECT * FROM exams').count).to eq(1)
+    end
+
+    context 'campo obrigatório não preenchido' do
+      it 'não informa o paciente' do
+        doctor = Doctor.create(crm: 'B000BJ20J4',
+                               crm_state: 'PI',
+                               name: 'Maria Luiza Pires',
+                               email: 'denna@wisozk.biz')
+        
+        exam = Exam.create(patient_id: nil,
+                           doctor_id: doctor['id'],
+                           result_token: 'IQCZ17',
+                           result_date: '2021-08-05')
+
+        expect(exam).to be_nil
+        expect(Database.connection.exec('SELECT * FROM exams').count).to eq(0)
+      end
+
+      it 'não informa o médico' do
+        patient = Patient.create(cpf: '048.973.170-88',
+                                 name: 'Emilly Batista Neto',
+                                 email: 'denna@wisozk.biz',
+                                 birthdate: '2001-03-11',
+                                 address: '165 Rua Rafaela',
+                                 city: 'Ituverava',
+                                 state: 'Alagoas')
+
+        exam = Exam.create(patient_id: patient['id'],
+                           doctor_id: nil,
+                           result_token: 'IQCZ17',
+                           result_date: '2021-08-05')
+
+        expect(exam).to be_nil
+        expect(Database.connection.exec('SELECT * FROM exams').count).to eq(0)
+      end
+
+      it 'não informa o token do exame' do
+        patient = Patient.create(cpf: '048.973.170-88',
+                                 name: 'Emilly Batista Neto',
+                                 email: 'denna@wisozk.biz',
+                                 birthdate: '2001-03-11',
+                                 address: '165 Rua Rafaela',
+                                 city: 'Ituverava',
+                                 state: 'Alagoas')
+
+        doctor = Doctor.create(crm: 'B000BJ20J4',
+                               crm_state: 'PI',
+                               name: 'Maria Luiza Pires',
+                               email: 'gerald.crona@ebert-quigley.com')
+
+        exam = Exam.create(patient_id: patient['id'],
+                           doctor_id: doctor['id'],
+                           result_token: '',
+                           result_date: '2021-08-05')
+
+        expect(exam).to be_nil
+        expect(Database.connection.exec('SELECT * FROM exams').count).to eq(0)
+      end
+
+      it 'não informa a data do exame' do
+        patient = Patient.create(cpf: '048.973.170-88',
+                                 name: 'Emilly Batista Neto',
+                                 email: 'denna@wisozk.biz',
+                                 birthdate: '2001-03-11',
+                                 address: '165 Rua Rafaela',
+                                 city: 'Ituverava',
+                                 state: 'Alagoas')
+
+        doctor = Doctor.create(crm: 'B000BJ20J4',
+                                crm_state: 'PI',
+                                name: 'Maria Luiza Pires',
+                                email: 'gerald.crona@ebert-quigley.com')
+
+        exam = Exam.create(patient_id: patient['id'],
+                            doctor_id: doctor['id'],
+                            result_token: 'IQCZ17',
+                            result_date: '')
+
+        expect(exam).to be_nil
+        expect(Database.connection.exec('SELECT * FROM exams').count).to eq(0)
+      end
+    end
   end
 
   describe '.find_by_result_token' do

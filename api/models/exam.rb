@@ -2,11 +2,16 @@ require './lib/database'
 
 class Exam
   def self.create(patient_id:, doctor_id:, result_token:, result_date:)
+    return if patient_id.nil? || doctor_id.nil? || result_token.empty? || result_date.empty?
     sql = <<~SQL
       INSERT INTO exams (patient_id, doctor_id, result_token, result_date)
       VALUES ($1, $2, $3, $4) RETURNING *
     SQL
-    Database.connection.exec_params(sql, [patient_id, doctor_id, result_token, result_date]).entries.first
+    begin
+      Database.connection.exec_params(sql, [patient_id, doctor_id, result_token, result_date]).entries.first
+    rescue PG::ForeignKeyViolation, PG::UniqueViolation
+      nil
+    end
   end
 
   def self.find_by_result_token(result_token:)

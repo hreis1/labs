@@ -20,6 +20,99 @@ RSpec.describe Patient do
       expect(patient['city']).to eq('Ituverava')
       expect(patient['state']).to eq('Alagoas')
     end
+
+    context 'campo obrigatório não preenchido' do
+      it 'não informa o CPF' do
+        patient = Patient.create(cpf: '',
+                                 name: 'Emilly Batista Neto',
+                                 email: 'denna@wisozk.biz',
+                                 birthdate: '2001-03-11',
+                                 address: '165 Rua Rafaela',
+                                 city: 'Ituverava',
+                                 state: 'Alagoas')
+
+        expect(patient).to be_nil
+        expect(Database.connection.exec('SELECT * FROM patients').count).to eq(0)
+      end
+
+      it 'não informa o nome' do
+        patient = Patient.create(cpf: '048.973.170-88',
+                                  name: '',
+                                  email: 'denna@wisozk.biz',
+                                  birthdate: '2001-03-11',
+                                  address: '165 Rua Rafaela',
+                                  city: 'Ituverava',
+                                  state: 'Alagoas')
+
+        expect(patient).to be_nil
+        expect(Database.connection.exec('SELECT * FROM patients').count).to eq(0)
+      end
+
+      it 'não informa o email' do
+        patient = Patient.create(cpf: '048.973.170-88',
+                                 name: 'Emilly Batista Neto',
+                                 email: '',
+                                 birthdate: '2001-03-11',
+                                 address: '165 Rua Rafaela',
+                                 city: 'Ituverava',
+                                 state: 'Alagoas')
+
+        expect(patient).to be_nil
+        expect(Database.connection.exec('SELECT * FROM patients').count).to eq(0)
+      end
+
+      it 'não informa a data de nascimento' do
+        patient = Patient.create(cpf: '048.973.170-88',
+                                 name: 'Emilly Batista Neto',
+                                 email: 'denna@wisozk.biz',
+                                 birthdate: '',
+                                 address: '165 Rua Rafaela',
+                                 city: 'Ituverava',
+                                 state: 'Alagoas')
+        
+        expect(patient).to be_nil
+        expect(Database.connection.exec('SELECT * FROM patients').count).to eq(0)
+      end
+
+      it 'não informa o endereço' do
+        patient = Patient.create(cpf: '048.973.170-88',
+                                 name: 'Emilly Batista Neto',
+                                 email: 'denna@wisozk.biz',
+                                 birthdate: '2001-03-11',
+                                 address: '',
+                                 city: 'Ituverava',
+                                 state: 'Alagoas')
+
+        expect(patient).to be_nil
+        expect(Database.connection.exec('SELECT * FROM patients').count).to eq(0)
+      end
+
+      it 'não informa a cidade' do
+        patient = Patient.create(cpf: '048.973.170-88',
+                                 name: 'Emilly Batista Neto',
+                                 email: 'denna@wisozk.biz',
+                                 birthdate: '2001-03-11',
+                                 address: '165 Rua Rafaela',
+                                 city: '',
+                                 state: 'Alagoas')
+
+        expect(patient).to be_nil
+        expect(Database.connection.exec('SELECT * FROM patients').count).to eq(0)
+      end
+
+      it 'não informa o estado' do
+        patient = Patient.create(cpf: '048.973.170-88',
+                                 name: 'Emilly Batista Neto',
+                                 email: 'denna@wisozk.biz',
+                                 birthdate: '2001-03-11',
+                                 address: '165 Rua Rafaela',
+                                 city: 'Ituverava',
+                                 state: '')
+
+        expect(patient).to be_nil
+        expect(Database.connection.exec('SELECT * FROM patients').count).to eq(0)
+      end
+    end
   end
 
   describe '.find_by_cpf' do
