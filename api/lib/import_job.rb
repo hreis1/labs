@@ -5,6 +5,6 @@ class ImportJob
   include Sidekiq::Job
 
   def perform(csv)
-    import_from_csv(csv:)
+    Import.import_from_csv(csv:)
   end
 end

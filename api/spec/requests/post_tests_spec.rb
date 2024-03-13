@@ -22,4 +22,14 @@ describe 'POST /api/import' do
     expect(last_response.content_type).to eq('application/json')
     expect(JSON.parse(last_response.body)).to eq('error' => 'Invalid file')
   end
+
+  it 'não importa um csv inválido' do
+    csv = 'spec/support/invalid_data.csv'
+    file = Rack::Test::UploadedFile.new(csv, 'text/csv')
+    post '/api/import', file: file
+
+    expect(last_response).to be_bad_request
+    expect(last_response.content_type).to eq('application/json')
+    expect(JSON.parse(last_response.body)).to eq('error' => 'Invalid file')
+  end
 end

@@ -2,13 +2,12 @@ require './models/patient'
 require './models/doctor'
 require './models/exam'
 require './models/test'
-require 'benchmark'
 require 'csv'
 
-def import_from_csv(csv:)
-  rows = CSV.parse(csv, col_sep: ';')
-  rows.shift
-  @time = Benchmark.measure do
+class Import
+  def self.import_from_csv(csv:)
+    rows = CSV.parse(csv, col_sep: ';')
+    rows.shift
     Database.connection.transaction do |conn|
       @connection = conn
       rows.each do |row|
@@ -29,5 +28,16 @@ def import_from_csv(csv:)
         Test.create(exam_id: exam['id'], type:, limits:, result:)
       end
     end
+  end
+
+  def self.valid?(csv:)
+    return false if csv.empty?
+    rows = CSV.parse(csv, col_sep: ';', encoding: 'UTF-8')
+    headers = rows.shift
+    return false if headers != ["cpf", "nome paciente", "email paciente", "data nascimento paciente", "endereço/rua paciente", "cidade paciente", "estado patiente", "crm médico", "crm médico estado", "nome médico", "email médico", "token resultado exame", "data exame", "tipo exame", "limites tipo exame", "resultado tipo exame"]
+    rows.each do |row|
+      return false if row.size != 16
+    end
+    true
   end
 end

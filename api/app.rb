@@ -28,7 +28,7 @@ post '/api/import' do
             request.body.read
           end
 
-    raise 'Invalid file' if csv.empty?
+    raise 'Invalid file' unless Import.valid?(csv: csv)
 
     ImportJob.perform_async(csv)
     status 201
