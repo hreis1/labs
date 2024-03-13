@@ -1,3 +1,5 @@
+ENV['APP_ENV'] = 'test'
+
 require './app'
 require './lib/database'
 require './lib/import'

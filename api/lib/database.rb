@@ -1,6 +1,6 @@
 require 'pg'
 
-ENV['DB_NAME'] = 'postgres_test' if ENV['RACK_ENV'] == 'test'
+ENV['DB_NAME'] = 'postgres_test' if ENV['APP_ENV'] == 'test'
 
 class Database
   def self.connection
