@@ -71,26 +71,13 @@ const createTable = (data) => {
 
     const tr = document.createElement('tr');
 
-    const tdToken = document.createElement('td');
-    tdToken.textContent = exam.result_token;
-    tdToken.classList.add('token');
-    tr.appendChild(tdToken);
-    
-    const tdResultDate = document.createElement('td');
-    tdResultDate.textContent = new Date(exam.result_date).toLocaleDateString();
-    tr.appendChild(tdResultDate);
-
-    const tdPatientName = document.createElement('td');
-    tdPatientName.textContent = exam.patient_name;
-    tr.appendChild(tdPatientName);
-
-    const tdCpf = document.createElement('td');
-    tdCpf.textContent = exam.cpf;
-    tr.appendChild(tdCpf);
-
-    const tdDoctor = document.createElement('td');
-    tdDoctor.textContent = exam.doctor.name;
-    tr.appendChild(tdDoctor);
+    tr.innerHTML = `
+      <td class="exams-table">${exam.result_token}</td>
+      <td class="exams-table">${new Date(exam.result_date).toLocaleDateString()}</td>
+      <td class="exams-table">${exam.patient_name}</td>
+      <td class="exams-table">${exam.cpf}</td>
+      <td class="exams-table">${exam.doctor.name}</td>
+    `;
 
     tr.addEventListener('click', function() {
       getExamData(exam.result_token);
@@ -116,17 +103,33 @@ getExamData = async (token) => {
     const modalContent = document.querySelector('.modal-content');
     modalContent.innerHTML = `
       <span class="close">&times;</span>
-      <h2>Exame: ${data.result_token}</h2>
-      <p><strong>Data:</strong> ${new Date(data.result_date).toLocaleDateString()}</p>
-      <p><strong>Paciente:</strong>
-      <p><strong>Nome:</strong> ${data.patient_name}</p>
-      <p><strong>Nascimento:</strong> ${new Date(data.birthdate).toLocaleDateString()}</p>
-      <p><strong>Email:</strong> ${data.email}</p>
-      <p><strong>CPF:</strong> ${data.cpf}</p>
-      <p><strong>Médico</strong>
-      <p><strong>Nome:</strong> ${data.doctor.name}</p>
-      <p><strong>CRM:</strong> ${data.doctor.crm}</p>
-      <p><strong>CRM UF:</strong> ${data.doctor.crm_state}</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Exame</th>
+            <th>Data</th>
+            <th>Paciente</th>
+            <th>Médico</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>${data.result_token}</td>
+            <td>${new Date(data.result_date).toLocaleDateString()}</td>
+            <td class="exams-description">
+              <p>nome: ${data.patient_name}</p>
+              <p>cpf: ${data.cpf}</p>
+              <p>nascimento: ${new Date(data.birthdate).toLocaleDateString()}</p>
+              <p>e-mail: ${data.email}</p>
+            </td>
+            <td>
+              <p>nome: ${data.doctor.name}</p>
+              <p>crm: ${data.doctor.crm} | ${data.doctor.crm_state}</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
       <table>
         <thead>
           <tr>
@@ -137,11 +140,14 @@ getExamData = async (token) => {
         </thead>
         <tbody>
           ${data.tests.map(exam => {
+            const result = exam.result;
+            const limits = exam.limits.split('-');
+            const cor = (Number(result) >= Number(limits[0]) && Number(result) <= Number(limits[1])) ? 'green' : 'red';
             return `
               <tr>
                 <td>${exam.type}</td>
                 <td>${exam.limits}</td>
-                <td>${exam.result}</td>
+                <td style="color: ${cor}"> ${exam.result}</td>
               </tr>
             `;
           }
@@ -149,7 +155,6 @@ getExamData = async (token) => {
         </tbody>
       </table>
     `;
-    console.log(data);
     const close = document.querySelector('.close');
     close.addEventListener('click', function() {
       modal.style.display = 'none';

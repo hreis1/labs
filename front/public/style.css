@@ -24,6 +24,8 @@
   margin: auto;
   padding: 20px;
   width: 80%;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .close {
@@ -38,6 +40,8 @@
   color: #f1356d;
   text-decoration: none;
   cursor: pointer;
+  transform: scale(1.1);
+  transition: 0.3s;
 }
 
 header{
@@ -101,8 +105,14 @@ th, td{
   border-bottom: 1px solid #f2f2f2;
 }
 
-td{
+.exams-table{
   cursor: pointer;
+}
+
+.exams-description{
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
 }
 
 tr:hover{
