@@ -116,24 +116,40 @@ getExamData = async (token) => {
     const modalContent = document.querySelector('.modal-content');
     modalContent.innerHTML = `
       <span class="close">&times;</span>
-      <h2>Exame</h2>
-      <p><strong>Token:</strong> ${data.result_token}</p>
+      <h2>Exame: ${data.result_token}</h2>
       <p><strong>Data:</strong> ${new Date(data.result_date).toLocaleDateString()}</p>
-      <p><strong>Paciente:</strong>< ${data.patient_name}</p>
+      <p><strong>Paciente:</strong>
+      <p><strong>Nome:</strong> ${data.patient_name}</p>
       <p><strong>Nascimento:</strong> ${new Date(data.birthdate).toLocaleDateString()}</p>
       <p><strong>Email:</strong> ${data.email}</p>
       <p><strong>CPF:</strong> ${data.cpf}</p>
-      <p><strong>Médico:</strong> ${data.doctor.name}</p>
+      <p><strong>Médico</strong>
+      <p><strong>Nome:</strong> ${data.doctor.name}</p>
       <p><strong>CRM:</strong> ${data.doctor.crm}</p>
       <p><strong>CRM UF:</strong> ${data.doctor.crm_state}</p>
-      ${data.tests.map(exam => {
-        return `<p><strong>Tipo:</strong> ${exam.type}</p>
-        <p><strong>Resultado:</strong> ${exam.result}</p>
-        <p><strong>Valor de Referência:</strong> ${exam.limits}</p>
-        `;
-      }
-      ).join('')}
+      <table>
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Valor de referência</th>
+            <th>Resultado</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${data.tests.map(exam => {
+            return `
+              <tr>
+                <td>${exam.type}</td>
+                <td>${exam.limits}</td>
+                <td>${exam.result}</td>
+              </tr>
+            `;
+          }
+        ).join('')}
+        </tbody>
+      </table>
     `;
+    console.log(data);
     const close = document.querySelector('.close');
     close.addEventListener('click', function() {
       modal.style.display = 'none';
