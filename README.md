@@ -1,35 +1,53 @@
 # LabsLabs
-Uma app web para listagem de exames médicos feita com Sinatra e PostgreSQL.
+Uma app web para listagem e importação de exames médicos feita com Ruby, Sinatra, PostgreSQL, Redis e Sidekiq.
 
 ## Requisitos
+- Git
 - Docker
 
-## Como rodar
+
+## Informações sobre o projeto
+
+### Diagrama de Entidade-Relacionamento
+As tabelas do banco de dados foram modeladas de acordo com o diagrama de entidade-relacionamento a seguir:
+
+![Diagrama de Entidade-Relacionamento](./diagrama_er.png)
+
+## Instalação
 ### Clone o repositório e entre na pasta
 ```bash
 git clone git@github.com:hreis1/rebase_labs.git
 cd rebase_labs
 ```
 
-### Criar o servidor
+### Initialize os serviços
+Execute o comando para subir as aplicações:
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
+Com isso, será criado:
+  - Um container com o banco de dados PostgreSQL, inicializado com as configurações do arquivo `./api/config/init.sql`, criando o database `postgres` e o database `postgres_test` com as tabelas necessárias.
+  - Um container com a api rodando Sinatra na porta 3000.
+  - Um container com o frontend rodando Sinatra na porta 3001.
+  - Um container com o Sidekiq, que é utilizado para processar os jobs de importação de exames.
+  - Um container com o Redis, que é utilizado pelo Sidekiq para armazenar os jobs.
 
-### Importar os dados
-Com o servidor criado, execute o script para importar os dados do CSV para o banco de dados:
-```bash
-docker compose exec api ruby import_from_csv.rb
-```
-
-### Rodar os testes
-Com o servidor criado, execute o comando para rodar os testes:
+## Testes
+### Backend
+Com o servidor criado, execute o comando para rodar os testes do backend:
 ```bash
 docker compose exec api rspec
 ```
 
-## Endpoints
-### Listar exames
+### Popular o banco de dados
+Com o servidor criado, execute o script para importar os dados do CSV localizado em `./api/data/data.csv` para o banco de dados:
+```bash
+docker compose exec api ruby import_from_csv.rb
+```
+
+
+## Endpoints da API
+### Listar todos os exames no banco de dados.
 ```
 GET /api/tests
 ```
@@ -93,7 +111,7 @@ HTTP Status: 200
 
 </details>
 
-### Obter exame
+### Obter exame a partir do token
 ```
 GET /api/tests/:token
 ```
@@ -101,7 +119,7 @@ GET /api/tests/:token
 <details>
 <summary>Exemplos de resposta</summary>
 
-### Com exame no banco de dados:
+### Retornando exame com o token fornecido:
 
 ```json
 {
@@ -127,7 +145,7 @@ GET /api/tests/:token
 
 HTTP Status: 200
 
-### Sem exame no banco de dados:
+### Sem exame com o token fornecido:
 
 ```json
 {
@@ -139,7 +157,7 @@ HTTP Status: 404
 
 </details>
 
-### Importar exames
+### Importar exames a partir de um arquivo CSV
 ```
 POST /api/import
 ```
@@ -171,6 +189,7 @@ cpf;nome paciente;email paciente;data nascimento paciente;endereço/rua paciente
 HTTP Status: 201
 
 ### Sem sucesso:
+O arquivo fornecido é validado antes de ser importado. A validação é feita verificando se o arquivo possui os cabeçalhos corretos e colunas suficientes. Caso o arquivo seja inválido, a resposta será:
 
 ```json
 {
@@ -181,3 +200,8 @@ HTTP Status: 201
 HTTP Status: 400
 
 </details>
+
+## Frontend
+
+### Acesse a aplicação web
+Com o servidor criado, acesse a aplicação web em `http://localhost:3001`.
