@@ -58,7 +58,7 @@ A API é uma aplicação Sinatra que fornece os seguintes endpoints:
 - `GET /api/tests/:token`: Obtem um exame a partir do token.
 - `POST /api/tests/import`: Importa exames a partir de um arquivo CSV.
 
-A API retorna os exames no formato JSON. Os exemplos de requisição e resposta podem ser encontrados em [API.md](./api/API.md).
+A API retorna os exames no formato JSON. Os exemplos de requisição e resposta podem ser encontrados em [API.md](./assets/API.md).
 
 ### Sidekiq
 O Sidekiq é um serviço que processa os jobs de importação de exames. Ele é utilizado para processar a importação de exames em segundo plano, evitando que a aplicação fique travada enquanto o arquivo é importado.
@@ -69,18 +69,24 @@ O Redis é um banco de dados em memória que é utilizado pelo Sidekiq para arma
 ## Frontend
 
 ### Importar exames
-Na página inicial, clique no botão "Importar CSV" e selecione o arquivo CSV que deseja importar. Após a importação, a página será recarregada e a tabela de exames será atualizada. Dependendo do tamanho do arquivo, a importação pode demorar alguns segundos. Recomenda-se o uso do arquivo `./api/spec/support/data.csv` para testar a importação.
+Na página inicial, clique no botão "Importar CSV" e selecione o arquivo CSV que deseja importar. Após a importação, a página será recarregada e a tabela de exames será atualizada. Dependendo do tamanho do arquivo, a importação pode demorar alguns segundos. Recomenda-se o uso do arquivo `./api/spec/support/data.csv` que contém 1 exame para testar a importação. Caso queira testar com um arquivo maior, utilize o arquivo `./api/data/data.csv` que contém 300 exames.
+
+![alt text](./assets/image-1.png)
 
 ### Listar exames
 Na página inicial, a tabela de exames será atualizada com os exames importados. Cada linha da tabela representa um exame e cada coluna representa um atributo do exame.
 
+![alt text](./assets/image-2.png)
+
 ### Pesquisar exames
 Na barra de pesquisa, você pode pesquisar exames por token, data do exame, nome do paciente, cpf do paciente ou nome do médico. A tabela será filtrada de acordo com o que foi digitado.
 
+![alt text](./assets/image-3.png)
+
 ### Visualizar exame
-Clique em qualquer linha da tabela para visualizar os detalhes do exame. Um modal será aberto com os detalhes do exame.
+Clique em qualquer linha da tabela para visualizar os detalhes do exame. Um modal será aberto com os detalhes do exame. O resultado do exame é exibido em verde caso esteja normal e em vermelho caso esteja alterado. Clicando no botão "X" ou fora do modal, o modal será fechado.
 
-
+![alt text](./assets/image-4.png)
 
 ## Banco de Dados
 O banco de dados utilizado é o PostgreSQL. Ele é criado automaticamente quando o servidor é iniciado pela primeira vez, inicializado com as configurações do arquivo `./api/config/init.sql`, criando o database `postgres` e o database `postgres_test` com as tabelas necessárias.
@@ -88,7 +94,7 @@ O banco de dados utilizado é o PostgreSQL. Ele é criado automaticamente quando
 ### Diagrama de Entidade-Relacionamento
 As tabelas do banco de dados foram modeladas de acordo com o diagrama de entidade-relacionamento a seguir:
 
-![Diagrama de Entidade-Relacionamento](./diagrama_er.png)
+![Diagrama de Entidade-Relacionamento](./assets/diagrama_er.png)
 
 ### Popular o banco de dados
 Com o servidor criado, execute o script para importar os dados do CSV localizado em `./api/data/data.csv` para o banco de dados:
