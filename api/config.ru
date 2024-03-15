@@ -1,4 +1,11 @@
 require './app'
 require 'rack/handler/puma'
+require 'sidekiq/web'
+require 'securerandom'; File.open(".session.key", "w") {|f| f.write(SecureRandom.hex(32)) }
 
-Rackup::Handler::Puma.run Sinatra::Application, Port: 3000
+app = Rack::Builder.new do
+  use Rack::Session::Cookie, secret: File.read(".session.key"), same_site: true, max_age: 86400
+  run Rack::URLMap.new('/' => Sinatra::Application, '/sidekiq' => Sidekiq::Web)
+end
+
+Rackup::Handler::Puma.run app, Port: 3000

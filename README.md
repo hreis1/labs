@@ -61,7 +61,7 @@ A API é uma aplicação Sinatra que fornece os seguintes endpoints:
 A API retorna os exames no formato JSON. Os exemplos de requisição e resposta podem ser encontrados em [API.md](./assets/API.md).
 
 ### Sidekiq
-O Sidekiq é um serviço que processa os jobs de importação de exames. Ele é utilizado para processar a importação de exames em segundo plano, evitando que a aplicação fique travada enquanto o arquivo é importado.
+O Sidekiq é um serviço que processa os jobs de importação de exames. Ele é utilizado para processar a importação de exames em segundo plano, evitando que a aplicação fique travada enquanto o arquivo é importado. É possível visualizar o status dos jobs em `http://localhost:3000/sidekiq`.
 
 ### Redis
 O Redis é um banco de dados em memória que é utilizado pelo Sidekiq para armazenar os jobs.
