@@ -105,8 +105,12 @@ O script lê o arquivo e importa os exames para o banco de dados de forma síncr
 
 ## Melhorias futuras
 - Adicionar paginação na listagem de exames.
-- Adicionar filtros na listagem de exames.
+- Adicionar filtros de ordenação na listagem de exames.
 - Adicionar validação de CPF e email na importação de exames.
-- Adicionar teste no frontend.
+- Adicionar testes no frontend.
 - Adicionar CI/CD.
 - Adicionar suporte a outros formatos de arquivo na importação de exames.
+- Melhorar tempo de inserção de dados
+- Melhorar query de busca de exames
+- Refatorar models(retirar métodos repetidos, usar OO)
+- Refatorar script js do front(separar em arquivos diferentes)
