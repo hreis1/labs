@@ -30,14 +30,23 @@ class Import
     end
   end
 
+  HEADERS = ["cpf", "nome paciente", "email paciente",
+             "data nascimento paciente", "endereço/rua paciente", 
+             "cidade paciente", "estado patiente", "crm médico",
+             "crm médico estado", "nome médico", "email médico",
+             "token resultado exame", "data exame", "tipo exame",
+             "limites tipo exame", "resultado tipo exame"].freeze
+
   def self.valid?(csv:)
     return false if csv.empty?
+
     rows = CSV.parse(csv, col_sep: ';', encoding: 'UTF-8')
     headers = rows.shift
-    return false if headers != ["cpf", "nome paciente", "email paciente", "data nascimento paciente", "endereço/rua paciente", "cidade paciente", "estado patiente", "crm médico", "crm médico estado", "nome médico", "email médico", "token resultado exame", "data exame", "tipo exame", "limites tipo exame", "resultado tipo exame"]
-    rows.each do |row|
-      return false if row.size != 16
-    end
+
+    return false if headers != HEADERS
+
+    rows.each { |row| return false if row.size != 16 }
+
     true
   end
 end
