@@ -142,5 +142,11 @@ RSpec.describe Patient do
       expect(patient['city']).to eq('Senador Elói de Souza')
       expect(patient['state']).to eq('Pernambuco')
     end
+
+    it 'retorna nil se não encontrar o paciente' do
+      patient = Patient.find_by_cpf(cpf: '066.126.400-90')
+
+      expect(patient).to be_nil
+    end
   end
 end

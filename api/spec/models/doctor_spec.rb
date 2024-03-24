@@ -77,5 +77,21 @@ RSpec.describe Doctor do
       expect(doctor['name']).to eq('Calebe Louzada')
       expect(doctor['email']).to eq('kendra@nolan-sawayn.co')
     end
+
+    it 'não encontra um médico' do
+      Doctor.create(crm: 'B000BJ20J4',
+                    crm_state: 'PI',
+                    name: 'Maria Luiza Pires',
+                    email: 'denna@wisozk.biz')
+      
+      Doctor.create(crm: 'B000B7CDX4',
+                    crm_state: 'SP',
+                    name: 'Calebe Louzada',
+                    email: 'kendra@nolan-sawayn.co')
+                  
+      doctor = Doctor.find_by_crm(crm: 'B000B7CDX4', crm_state: 'PI')
+
+      expect(doctor).to be_nil
+    end
   end
 end
