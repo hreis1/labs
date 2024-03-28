@@ -1,4 +1,4 @@
-# LabsLabs
+# Labs
 Uma app web para listagem e importação de exames médicos feita com Ruby, Sinatra, PostgreSQL, Redis, Sidekiq e HTML/CSS/JS.
 
 - [Instalação](#instalação)
