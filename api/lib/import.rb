@@ -8,8 +8,7 @@ class Import
   def self.import_from_csv(csv:)
     rows = CSV.parse(csv, col_sep: ';')
     rows.shift
-    Database.connection.transaction do |conn|
-      @connection = conn
+    Database.connection.transaction do
       rows.each do |row|
         cpf, name, email, birthdate, address, city, state = row[0..6]
 

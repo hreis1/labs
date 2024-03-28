@@ -52,7 +52,7 @@ RSpec.describe Test do
                            doctor_id: doctor['id'],
                            result_token: 'IQCZ17',
                            result_date: '2021-08-05')
-        
+
         test = Test.create(exam_id: exam['id'],
                            type: '',
                            limits: '45-52',
@@ -85,7 +85,7 @@ RSpec.describe Test do
                            type: 'hemácias',
                            limits: '',
                            result: 97)
-                          
+
         expect(test).to be_nil
         expect(Database.connection.exec('SELECT * FROM tests').count).to eq(0)
       end

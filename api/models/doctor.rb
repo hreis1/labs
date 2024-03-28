@@ -3,6 +3,7 @@ require './lib/database'
 class Doctor
   def self.create(crm:, crm_state:, name:, email:)
     return if crm.empty? || crm_state.empty? || name.empty? || email.empty?
+
     sql = <<~SQL
       INSERT INTO doctors (crm, crm_state, name, email)
       VALUES ($1, $2, $3, $4)

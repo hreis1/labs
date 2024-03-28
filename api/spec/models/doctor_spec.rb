@@ -20,8 +20,8 @@ RSpec.describe Doctor do
         doctor = Doctor.create(crm: '',
                                crm_state: 'PI',
                                name: 'Maria Luiza Pires',
-                               email: 'denna@wisozk.biz',)
-        
+                               email: 'denna@wisozk.biz')
+
         expect(doctor).to be_nil
         expect(Database.connection.exec('SELECT * FROM doctors').count).to eq(0)
       end
@@ -31,7 +31,7 @@ RSpec.describe Doctor do
                                crm_state: '',
                                name: 'Maria Luiza Pires',
                                email: 'denna@wisozk.biz')
-        
+
         expect(doctor).to be_nil
         expect(Database.connection.exec('SELECT * FROM doctors').count).to eq(0)
       end
@@ -83,12 +83,12 @@ RSpec.describe Doctor do
                     crm_state: 'PI',
                     name: 'Maria Luiza Pires',
                     email: 'denna@wisozk.biz')
-      
+
       Doctor.create(crm: 'B000B7CDX4',
                     crm_state: 'SP',
                     name: 'Calebe Louzada',
                     email: 'kendra@nolan-sawayn.co')
-                  
+
       doctor = Doctor.find_by_crm(crm: 'B000B7CDX4', crm_state: 'PI')
 
       expect(doctor).to be_nil

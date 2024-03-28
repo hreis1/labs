@@ -37,12 +37,12 @@ RSpec.describe Patient do
 
       it 'não informa o nome' do
         patient = Patient.create(cpf: '048.973.170-88',
-                                  name: '',
-                                  email: 'denna@wisozk.biz',
-                                  birthdate: '2001-03-11',
-                                  address: '165 Rua Rafaela',
-                                  city: 'Ituverava',
-                                  state: 'Alagoas')
+                                 name: '',
+                                 email: 'denna@wisozk.biz',
+                                 birthdate: '2001-03-11',
+                                 address: '165 Rua Rafaela',
+                                 city: 'Ituverava',
+                                 state: 'Alagoas')
 
         expect(patient).to be_nil
         expect(Database.connection.exec('SELECT * FROM patients').count).to eq(0)
@@ -69,7 +69,7 @@ RSpec.describe Patient do
                                  address: '165 Rua Rafaela',
                                  city: 'Ituverava',
                                  state: 'Alagoas')
-        
+
         expect(patient).to be_nil
         expect(Database.connection.exec('SELECT * FROM patients').count).to eq(0)
       end

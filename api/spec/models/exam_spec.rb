@@ -35,9 +35,9 @@ RSpec.describe Exam do
                              email: 'denna@wisozk.biz')
 
       exam = Exam.create(patient_id: 1,
-                          doctor_id: doctor['id'],
-                          result_token: 'IQCZ17',
-                          result_date: '2021-08-05')
+                         doctor_id: doctor['id'],
+                         result_token: 'IQCZ17',
+                         result_date: '2021-08-05')
 
       expect(exam).to be_nil
       expect(Database.connection.exec('SELECT * FROM exams').count).to eq(0)
@@ -81,10 +81,10 @@ RSpec.describe Exam do
                   result_date: '2021-08-05')
 
       exam = Exam.create(patient_id: patient['id'],
-                          doctor_id: doctor['id'],
-                          result_token: 'IQCZ17',
-                          result_date: '2021-08-05')
-    
+                         doctor_id: doctor['id'],
+                         result_token: 'IQCZ17',
+                         result_date: '2021-08-05')
+
       expect(exam).to be_nil
       expect(Database.connection.exec('SELECT * FROM exams').count).to eq(1)
     end
@@ -95,7 +95,7 @@ RSpec.describe Exam do
                                crm_state: 'PI',
                                name: 'Maria Luiza Pires',
                                email: 'denna@wisozk.biz')
-        
+
         exam = Exam.create(patient_id: nil,
                            doctor_id: doctor['id'],
                            result_token: 'IQCZ17',
@@ -156,14 +156,14 @@ RSpec.describe Exam do
                                  state: 'Alagoas')
 
         doctor = Doctor.create(crm: 'B000BJ20J4',
-                                crm_state: 'PI',
-                                name: 'Maria Luiza Pires',
-                                email: 'gerald.crona@ebert-quigley.com')
+                               crm_state: 'PI',
+                               name: 'Maria Luiza Pires',
+                               email: 'gerald.crona@ebert-quigley.com')
 
         exam = Exam.create(patient_id: patient['id'],
-                            doctor_id: doctor['id'],
-                            result_token: 'IQCZ17',
-                            result_date: '')
+                           doctor_id: doctor['id'],
+                           result_token: 'IQCZ17',
+                           result_date: '')
 
         expect(exam).to be_nil
         expect(Database.connection.exec('SELECT * FROM exams').count).to eq(0)
@@ -211,7 +211,6 @@ RSpec.describe Exam do
                   limits: '12-16',
                   result: 14)
 
-    
       exam = Exam.find_by_result_token(result_token: 'IQCZ18')
 
       expect(exam['id']).not_to be_nil
