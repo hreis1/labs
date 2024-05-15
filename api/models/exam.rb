@@ -56,25 +56,23 @@ class Exam
     }
   end
 
-  def self.all
+  def self.paginate(page:, per_page:)
     sql = <<~SQL
       SELECT
-        result_token, result_date,
+        result_token,
+        result_date,
         patients.cpf,
         patients.name AS patient_name,
-        patients.email,
-        patients.birthdate,
-        doctors.crm,
-        doctors.crm_state,
-        doctors.name AS doctor_name,
-        tests.type, tests.limits, tests.result
+        doctors.name AS doctor_name
       FROM exams
       JOIN patients ON patient_id = patients.id
       JOIN doctors  ON doctor_id = doctors.id
-      JOIN tests    ON exam_id = exams.id
+      LIMIT $1 OFFSET $2
     SQL
-
-    result = Database.connection.exec(sql).entries
+    page = page.to_i
+    per_page = per_page.to_i
+    offset = (page - 1) * per_page
+    result = Database.connection.exec_params(sql, [per_page, offset]).entries
     exams = {}
     result.each do |test|
       if exams[test['result_token']]

@@ -5,7 +5,10 @@ require 'sinatra'
 get '/api/tests' do
   headers 'Access-Control-Allow-Origin' => 'http://localhost:3001'
   content_type :json
-  Exam.all.to_json
+  page = params[:page] || 1
+  per_page = params[:per_page] || 10
+  exams = Exam.paginate(page: page, per_page: per_page)
+  exams.to_json
 end
 
 get '/api/tests/:token' do

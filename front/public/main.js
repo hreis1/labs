@@ -18,19 +18,19 @@ document.getElementById('fileInput').addEventListener('change', async function()
     }
 });
 
-document.getElementById('search').addEventListener('input', function(event) {
-  const trs = document.querySelectorAll('tbody tr');
-  trs.forEach(tr => {
-    const tds = tr.querySelectorAll('td');
-    let found = false;
-    tds.forEach(td => {
-      let value = event.target.value.trim();
-      if (td.textContent.toUpperCase().includes(value.toUpperCase())) {
-        found = true;
-      }
-    });
-    tr.style.display = found ? '' : 'none';
-  });
+document.getElementById('search').addEventListener('keypress', async function(event) {
+  if (event.key === 'Enter') {
+    const search = this.value;
+    if (!search || search.length != 6) {
+      return;
+    }
+    const exam = await getExam(search);
+    if (exam.error) {
+      createExamsTable([]);
+    } else {
+      createExamModal(exam);
+    }
+  }
 });
 
 const getExams = async () => {
@@ -97,7 +97,12 @@ const getExam = async (token) => {
 
 const createExamModal = (exam) => {
   const main = document.querySelector('main');
-
+  if (document.querySelector('.modal')) {
+    document.querySelector('.modal').remove();
+  }
+  if (!exam) {
+    return;
+  }
   const modal = document.createElement('div');
   modal.classList.add('modal');
   main.appendChild(modal);
